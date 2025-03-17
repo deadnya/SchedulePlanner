@@ -1,7 +1,7 @@
-package com.example.control1.controller;
+package com.example.control1.controller.employee;
 
+import com.example.control1.dto.common.CreateResponseDTO;
 import com.example.control1.dto.employee.EmployeeCreateDTO;
-import com.example.control1.dto.employee.EmployeeCreateResponseDTO;
 import com.example.control1.dto.employee.EmployeeDTO;
 import com.example.control1.service.employee.EmployeeService;
 import jakarta.validation.Valid;
@@ -18,7 +18,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/create")
-    public ResponseEntity<EmployeeCreateResponseDTO> createEmployee(
+    public ResponseEntity<CreateResponseDTO> createEmployee(
             @Valid @RequestBody EmployeeCreateDTO employeeCreateDTO
     ) {
         return ResponseEntity.ok(employeeService.createEmployee(employeeCreateDTO));

@@ -1,7 +1,7 @@
 package com.example.control1.service.employee.impl;
 
+import com.example.control1.dto.common.CreateResponseDTO;
 import com.example.control1.dto.employee.EmployeeCreateDTO;
-import com.example.control1.dto.employee.EmployeeCreateResponseDTO;
 import com.example.control1.dto.employee.EmployeeDTO;
 import com.example.control1.entity.Employee;
 import com.example.control1.mapper.EmployeeMapper;
@@ -25,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Override
-    public EmployeeCreateResponseDTO createEmployee(EmployeeCreateDTO employeeCreateDTO) {
+    public CreateResponseDTO createEmployee(EmployeeCreateDTO employeeCreateDTO) {
 
         Employee employee = employeeMapper.toEmployee(employeeCreateDTO);
         employee.setId(generateRandomUUID());

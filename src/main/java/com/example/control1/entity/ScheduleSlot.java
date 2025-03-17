@@ -1,5 +1,6 @@
 package com.example.control1.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +19,15 @@ public class ScheduleSlot {
     @Column(length = 32)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schedule_template_id", nullable = false)
     private ScheduleTemplate scheduleTemplate;
 
-    @Column(name = "begin_time", nullable = false)
+    @Column(name = "begin_time", nullable = false, columnDefinition = "TIMETZ")
+    @JsonFormat(pattern = "HH:mm:ssZ")
     private OffsetTime beginTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time", nullable = false, columnDefinition = "TIMETZ")
+    @JsonFormat(pattern = "HH:mm:ssZ")
     private OffsetTime endTime;
 }

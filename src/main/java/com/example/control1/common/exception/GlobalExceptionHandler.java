@@ -46,4 +46,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorModel(HttpStatus.BAD_REQUEST.value(), List.of("Invalid enum value")));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorModel> handleHttpMessageNotReadableException(IllegalArgumentException ex, WebRequest request) throws IOException {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorModel(HttpStatus.BAD_REQUEST.value(), List.of(ex.getMessage())));
+    }
 }
