@@ -1,10 +1,17 @@
 package com.example.control1.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -14,9 +21,34 @@ import lombok.Setter;
 public class SchedulePeriod {
 
     public enum SlotType {
-        LOCAL,
-        FROM_HOME,
-        UNDEFINED
+        @Schema(description = "LOCAL")
+        LOCAL("LOCAL"),
+        @Schema(description = "FROM HOME")
+        FROM_HOME("FROM HOME"),
+        @Schema(description = "UNDEFINED")
+        UNDEFINED("UNDEFINED");
+
+        private final String value;
+
+        SlotType(String value) {
+            this.value = value;
+        }
+
+        @JsonValue
+        public String getValue() {
+            return value;
+        }
+
+        @JsonCreator
+        public static SlotType getItem(String value) {
+            for (SlotType item : values()) {
+                if (Objects.equals(item.getValue(), value)) {
+                    return item;
+                }
+            }
+
+            throw new IllegalArgumentException(String.format("Invalid enum value: %s", value));
+        }
     }
 
     @Id
