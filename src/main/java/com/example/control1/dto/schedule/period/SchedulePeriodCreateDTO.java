@@ -11,11 +11,7 @@ public record SchedulePeriodCreateDTO(
         @NotNull(message = "Schedule id must be present")
         String scheduleId,
 
-        @NotNull(message = "Slot type must be present")
         SlotType slotType,
-
-        @NotNull(message = "Administrator id must be present")
-        String administratorId,
 
         String executorId
 ) {

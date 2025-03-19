@@ -7,6 +7,7 @@ import com.example.control1.entity.Schedule;
 import com.example.control1.mapper.ScheduleMapper;
 import com.example.control1.repository.ScheduleRepository;
 import com.example.control1.service.schedule.main.ScheduleService;
+import com.example.control1.service.uuid.UUIDService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,20 +18,19 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static com.example.control1.common.util.Utility.generateRandomUUID;
-
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
+    private final UUIDService uuidService;
 
     @Override
     public CreateResponseDTO createSchedule(ScheduleCreateDTO scheduleCreateDTO) {
 
         Schedule schedule = scheduleMapper.toSchedule(scheduleCreateDTO);
-        schedule.setId(generateRandomUUID());
+        schedule.setId(uuidService.getRandomUUID());
 
         scheduleRepository.save(schedule);
 
@@ -40,16 +40,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleDTO getSchedule(String request) {
 
-        Optional<Schedule> schedule = scheduleRepository.findById(request);
+        Optional<Schedule> schedule = scheduleRepository.findByIdSortPeriodsByBeginTime(request);
 
         if (schedule.isEmpty()) {
-            schedule = scheduleRepository.findByScheduleName(request);
+            schedule = scheduleRepository.findByScheduleNameSortPeriodsByBeginTime(request);
         }
 
         if (schedule.isEmpty()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    String.format("could not find schedule by request: %s", request)
+                    String.format("Could not find schedule by request: %s", request)
             );
         }
 

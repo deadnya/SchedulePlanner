@@ -3,6 +3,7 @@ package com.example.control1.mapper;
 import com.example.control1.dto.common.CreateResponseDTO;
 import com.example.control1.dto.schedule.main.ScheduleCreateDTO;
 import com.example.control1.dto.schedule.main.ScheduleDTO;
+import com.example.control1.dto.schedule.main.ScheduleShortDTO;
 import com.example.control1.dto.schedule.period.SchedulePeriodCreateDTO;
 import com.example.control1.dto.schedule.period.SchedulePeriodDTO;
 import com.example.control1.dto.schedule.slot.ScheduleSlotCreateDTO;
@@ -22,6 +23,7 @@ public interface ScheduleMapper {
     Schedule toSchedule(ScheduleCreateDTO scheduleCreateDTO);
     CreateResponseDTO toResponseCreateDTO(Schedule schedule);
     ScheduleDTO toDTO(Schedule schedule);
+    ScheduleShortDTO toShortDTO(Schedule schedule);
 
     ScheduleTemplate toScheduleTemplate(ScheduleTemplateCreateDTO scheduleTemplateCreateDTO);
     CreateResponseDTO toCreateResponseDTO(ScheduleTemplate scheduleTemplate);

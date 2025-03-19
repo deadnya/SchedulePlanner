@@ -7,6 +7,7 @@ import com.example.control1.entity.Employee;
 import com.example.control1.mapper.EmployeeMapper;
 import com.example.control1.repository.EmployeeRepository;
 import com.example.control1.service.employee.EmployeeService;
+import com.example.control1.service.uuid.UUIDService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,20 +16,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import static com.example.control1.common.util.Utility.generateRandomUUID;
-
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final UUIDService uuidService;
 
     @Override
     public CreateResponseDTO createEmployee(EmployeeCreateDTO employeeCreateDTO) {
 
         Employee employee = employeeMapper.toEmployee(employeeCreateDTO);
-        employee.setId(generateRandomUUID());
+        employee.setId(uuidService.getRandomUUID());
+
+        if (employee.getPosition() == null) {
+            employee.setPosition(Employee.Position.UNDEFINED);
+        }
 
         employeeRepository.save(employee);
 

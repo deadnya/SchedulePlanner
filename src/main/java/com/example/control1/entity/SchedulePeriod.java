@@ -1,15 +1,12 @@
 package com.example.control1.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Objects;
 
@@ -19,6 +16,30 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "schedule_periods")
 public class SchedulePeriod {
+
+    @Id
+    @Column(length = 32)
+    private String id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "slot_id", nullable = false)
+    private ScheduleSlot slot;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "slot_type", nullable = false, length = 20)
+    private SlotType slotType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "administrator_id", nullable = false)
+    private Employee administrator;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "executor_id")
+    private Employee executor;
 
     public enum SlotType {
         @Schema(description = "LOCAL")
@@ -47,32 +68,8 @@ public class SchedulePeriod {
                 }
             }
 
-            throw new IllegalArgumentException(String.format("Invalid enum value: %s", value));
+            if (value != null) throw new IllegalArgumentException(String.format("Invalid enum value: %s", value));
+            return null;
         }
     }
-
-    @Id
-    @Column(length = 32)
-    private String id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "slot_id", nullable = false)
-    private ScheduleSlot scheduleSlot;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    @JsonManagedReference
-    private Schedule schedule;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "slot_type", nullable = false, length = 20)
-    private SlotType slotType;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "administrator_id", nullable = false)
-    private Employee administrator;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "executor_id")
-    private Employee executor;
 }

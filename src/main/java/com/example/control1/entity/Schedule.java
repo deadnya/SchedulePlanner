@@ -1,6 +1,5 @@
 package com.example.control1.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +34,6 @@ public class Schedule {
     private Instant updateDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "schedule", orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<SchedulePeriod> schedulePeriods = new ArrayList<>();
 
     public void addPeriod(SchedulePeriod schedulePeriod) {

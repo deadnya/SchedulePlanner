@@ -9,4 +9,5 @@ public record SchedulePeriodFilter(
         SlotType slotType,
         String administratorId,
         String executorId
-) { }
+) {
+}

@@ -1,6 +1,7 @@
 package com.example.control1.controller.schedule;
 
 import com.example.control1.dto.common.CreateResponseDTO;
+import com.example.control1.dto.schedule.period.OutputSettings;
 import com.example.control1.dto.schedule.period.SchedulePeriodCreateDTO;
 import com.example.control1.dto.schedule.period.SchedulePeriodDTO;
 import com.example.control1.service.schedule.period.SchedulePeriodService;
@@ -19,9 +20,10 @@ public class SchedulePeriodController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateResponseDTO> createSchedulePeriod(
+            @RequestHeader("x-current-user") String currentUserId,
             @Valid @RequestBody SchedulePeriodCreateDTO schedulePeriodCreateDTO
     ) {
-        return ResponseEntity.ok(schedulePeriodService.createSchedulePeriod(schedulePeriodCreateDTO));
+        return ResponseEntity.ok(schedulePeriodService.createSchedulePeriod(schedulePeriodCreateDTO, currentUserId));
     }
 
     @GetMapping("/get/{id}")
@@ -31,11 +33,10 @@ public class SchedulePeriodController {
         return ResponseEntity.ok(schedulePeriodService.getSchedulePeriod(id));
     }
 
-    @GetMapping("/get")
+    @PostMapping("/get")
     public ResponseEntity<Page<SchedulePeriodDTO>> getAllSchedulePeriods(
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "size", defaultValue = "5") Integer size
+            @RequestBody OutputSettings outputSettings
     ) {
-        return ResponseEntity.ok(schedulePeriodService.getAllSchedulePeriods(page, size));
+        return ResponseEntity.ok(schedulePeriodService.getAllSchedulePeriods(outputSettings));
     }
 }

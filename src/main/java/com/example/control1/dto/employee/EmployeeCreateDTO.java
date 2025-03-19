@@ -14,7 +14,6 @@ public record EmployeeCreateDTO(
         @NotNull(message = "Status must be present")
         Status status,
 
-        @NotNull(message = "Position must be present")
         Position position
 ) {
 }

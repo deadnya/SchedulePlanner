@@ -7,6 +7,7 @@ import com.example.control1.entity.ScheduleTemplate;
 import com.example.control1.mapper.ScheduleMapper;
 import com.example.control1.repository.ScheduleTemplateRepository;
 import com.example.control1.service.schedule.template.ScheduleTemplateService;
+import com.example.control1.service.uuid.UUIDService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,20 +16,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import static com.example.control1.common.util.Utility.generateRandomUUID;
-
 @Service
 @RequiredArgsConstructor
 public class ScheduleTemplateServiceImpl implements ScheduleTemplateService {
 
     private final ScheduleTemplateRepository scheduleTemplateRepository;
     private final ScheduleMapper scheduleMapper;
+    private final UUIDService uuidService;
 
     @Override
     public CreateResponseDTO createScheduleTemplate(ScheduleTemplateCreateDTO scheduleTemplateCreateDTO) {
 
         ScheduleTemplate scheduleTemplate = scheduleMapper.toScheduleTemplate(scheduleTemplateCreateDTO);
-        scheduleTemplate.setId(generateRandomUUID());
+        scheduleTemplate.setId(uuidService.getRandomUUID());
 
         scheduleTemplateRepository.save(scheduleTemplate);
 

@@ -1,6 +1,6 @@
 package com.example.control1.dto.schedule.slot;
 
-import com.example.control1.entity.ScheduleTemplate;
+import com.example.control1.dto.schedule.template.ScheduleTemplateDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -10,7 +10,7 @@ public record ScheduleSlotDTO(
 
         String id,
 
-        ScheduleTemplate scheduleTemplate,
+        ScheduleTemplateDTO scheduleTemplate,
 
         @JsonFormat(pattern = "HH:mm:ssZ")
         @Schema(type = "string", format = "time", example = "14:30:00-0800")

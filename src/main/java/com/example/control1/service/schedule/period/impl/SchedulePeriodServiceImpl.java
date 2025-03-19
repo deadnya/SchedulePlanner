@@ -1,6 +1,7 @@
 package com.example.control1.service.schedule.period.impl;
 
 import com.example.control1.dto.common.CreateResponseDTO;
+import com.example.control1.dto.schedule.period.OutputSettings;
 import com.example.control1.dto.schedule.period.SchedulePeriodCreateDTO;
 import com.example.control1.dto.schedule.period.SchedulePeriodDTO;
 import com.example.control1.entity.Employee;
@@ -13,17 +14,16 @@ import com.example.control1.repository.SchedulePeriodRepository;
 import com.example.control1.repository.ScheduleRepository;
 import com.example.control1.repository.ScheduleSlotRepository;
 import com.example.control1.service.schedule.period.SchedulePeriodService;
+import com.example.control1.service.schedule.period.filter.SchedulePeriodFilterProvider;
+import com.example.control1.service.uuid.UUIDService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Comparator;
-
-import static com.example.control1.common.util.Utility.generateRandomUUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +34,18 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
     private final ScheduleRepository scheduleRepository;
     private final EmployeeRepository employeeRepository;
     private final ScheduleMapper scheduleMapper;
+    private final UUIDService uuidService;
+    private final SchedulePeriodFilterProvider schedulePeriodFilterProvider;
 
     @Override
-    public CreateResponseDTO createSchedulePeriod(SchedulePeriodCreateDTO schedulePeriodCreateDTO) {
+    public CreateResponseDTO createSchedulePeriod(SchedulePeriodCreateDTO schedulePeriodCreateDTO, String currentUserId) {
 
         SchedulePeriod schedulePeriod = scheduleMapper.toSchedulePeriod(schedulePeriodCreateDTO);
-        schedulePeriod.setId(generateRandomUUID());
+        schedulePeriod.setId(uuidService.getRandomUUID());
+
+        if (schedulePeriod.getSlotType() == null) {
+            schedulePeriod.setSlotType(SchedulePeriod.SlotType.UNDEFINED);
+        }
 
         ScheduleSlot scheduleSlot = scheduleSlotRepository.findById(
                 schedulePeriodCreateDTO.slotId()
@@ -60,17 +66,17 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
         );
 
         Employee administrator = employeeRepository.findById(
-                schedulePeriodCreateDTO.administratorId()
+                currentUserId
         ).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("Employee with id: %s not found", schedulePeriodCreateDTO.administratorId())
+                        String.format("Employee with id: %s not found", currentUserId)
                 )
         );
 
         Employee executor = null;
 
-        if (!schedulePeriodCreateDTO.administratorId().equals(schedulePeriodCreateDTO.executorId())) {
+        if (!currentUserId.equals(schedulePeriodCreateDTO.executorId())) {
 
             executor = employeeRepository.findById(
                     schedulePeriodCreateDTO.executorId()
@@ -82,27 +88,25 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
             );
         }
 
-        //schedule.getSchedulePeriods().sort(Comparator.comparing(s -> s.getScheduleSlot().getBeginTime()));
-
         for (var oldPeriod : schedule.getSchedulePeriods()) {
 
             boolean startIntersects =
-                    oldPeriod.getScheduleSlot().getBeginTime().isBefore(scheduleSlot.getBeginTime()) &&
-                            oldPeriod.getScheduleSlot().getEndTime().isAfter(scheduleSlot.getBeginTime());
+                    oldPeriod.getSlot().getBeginTime().isBefore(scheduleSlot.getBeginTime()) &&
+                            oldPeriod.getSlot().getEndTime().isAfter(scheduleSlot.getBeginTime());
 
             boolean endIntersects =
-                    oldPeriod.getScheduleSlot().getBeginTime().isBefore(scheduleSlot.getEndTime()) &&
-                            oldPeriod.getScheduleSlot().getEndTime().isAfter(scheduleSlot.getEndTime());
+                    oldPeriod.getSlot().getBeginTime().isBefore(scheduleSlot.getEndTime()) &&
+                            oldPeriod.getSlot().getEndTime().isAfter(scheduleSlot.getEndTime());
 
-            if (oldPeriod.getScheduleSlot().getBeginTime().isAfter(oldPeriod.getScheduleSlot().getEndTime())) {
+            if (oldPeriod.getSlot().getBeginTime().isAfter(oldPeriod.getSlot().getEndTime())) {
 
                 startIntersects =
-                        oldPeriod.getScheduleSlot().getBeginTime().isBefore(scheduleSlot.getBeginTime()) ||
-                                oldPeriod.getScheduleSlot().getEndTime().isAfter(scheduleSlot.getBeginTime());
+                        oldPeriod.getSlot().getBeginTime().isBefore(scheduleSlot.getBeginTime()) ||
+                                oldPeriod.getSlot().getEndTime().isAfter(scheduleSlot.getBeginTime());
 
                 endIntersects =
-                        oldPeriod.getScheduleSlot().getBeginTime().isBefore(scheduleSlot.getEndTime()) ||
-                                oldPeriod.getScheduleSlot().getEndTime().isAfter(scheduleSlot.getEndTime());
+                        oldPeriod.getSlot().getBeginTime().isBefore(scheduleSlot.getEndTime()) ||
+                                oldPeriod.getSlot().getEndTime().isAfter(scheduleSlot.getEndTime());
             }
 
             if (startIntersects || endIntersects) {
@@ -110,7 +114,7 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
             }
         }
 
-        schedulePeriod.setScheduleSlot(scheduleSlot);
+        schedulePeriod.setSlot(scheduleSlot);
         schedulePeriod.setSchedule(schedule);
         schedulePeriod.setAdministrator(administrator);
         schedulePeriod.setExecutor(executor);
@@ -131,10 +135,13 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
     }
 
     @Override
-    public Page<SchedulePeriodDTO> getAllSchedulePeriods(Integer page, Integer size) {
+    public Page<SchedulePeriodDTO> getAllSchedulePeriods(OutputSettings outputSettings) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        var specification = schedulePeriodFilterProvider.getSpecForAllSchedulePeriods(outputSettings);
 
-        return schedulePeriodRepository.findAll(pageable).map(scheduleMapper::toDTO);
+        Sort sort = schedulePeriodFilterProvider.getSortForAllSchedulePeriods(outputSettings);
+        Pageable pageable = PageRequest.of(outputSettings.page(), 5, sort != null ? sort : Sort.unsorted());
+
+        return schedulePeriodRepository.findAll(specification, pageable).map(scheduleMapper::toDTO);
     }
 }

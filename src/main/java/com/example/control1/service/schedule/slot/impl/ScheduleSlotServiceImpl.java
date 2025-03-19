@@ -9,16 +9,14 @@ import com.example.control1.mapper.ScheduleMapper;
 import com.example.control1.repository.ScheduleSlotRepository;
 import com.example.control1.repository.ScheduleTemplateRepository;
 import com.example.control1.service.schedule.slot.ScheduleSlotService;
+import com.example.control1.service.uuid.UUIDService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import static com.example.control1.common.util.Utility.generateRandomUUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +25,13 @@ public class ScheduleSlotServiceImpl implements ScheduleSlotService {
     private final ScheduleSlotRepository scheduleSlotRepository;
     private final ScheduleTemplateRepository scheduleTemplateRepository;
     private final ScheduleMapper scheduleMapper;
+    private final UUIDService uuidService;
 
     @Override
     public CreateResponseDTO createScheduleSlot(ScheduleSlotCreateDTO scheduleSlotCreateDTO) {
 
         ScheduleSlot scheduleSlot = scheduleMapper.toScheduleSlot(scheduleSlotCreateDTO);
-        scheduleSlot.setId(generateRandomUUID());
+        scheduleSlot.setId(uuidService.getRandomUUID());
 
         ScheduleTemplate scheduleTemplate = scheduleTemplateRepository.findById(
                 scheduleSlotCreateDTO.scheduleTemplateId()

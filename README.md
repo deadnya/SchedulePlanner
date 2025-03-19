@@ -45,13 +45,13 @@
 
 | Поле | Тип | Обязательность | Описание |
 | ------ | ------ | ------ | ------ |
-| filter | JSON | - | ------ |
-| filter.id | VARCHAR(32) | - | Идентификатор |
-| filter.slotId | VARCHAR(32) | - | Идентификатор слота |
-| filter.scheduleId | VARCHAR(32) | - | Идентификатор сущности расписания, в рамках которой существует слот |
-| filter.slotType | VARCHAR(20) | - | Тип слота. Возможные значения: [LOCAL, FROM HOME, UNDEFINED] |
-| filter.administratorId | VARCHAR(32) | - | Идентификатор владельца слота|
-| filter.executorId | VARCHAR(32) | - | Идентификатор исполнителя слота |
+| schedulePeriodFilter | JSON | - | ------ |
+| schedulePeriodFilter.id | VARCHAR(32) | - | Идентификатор |
+| schedulePeriodFilter.slotId | VARCHAR(32) | - | Идентификатор слота |
+| schedulePeriodFilter.scheduleId | VARCHAR(32) | - | Идентификатор сущности расписания, в рамках которой существует слот |
+| schedulePeriodFilter.slotType | VARCHAR(20) | - | Тип слота. Возможные значения: [LOCAL, FROM HOME, UNDEFINED] |
+| schedulePeriodFilter.administratorId | VARCHAR(32) | - | Идентификатор владельца слота|
+| schedulePeriodFilter.executorId | VARCHAR(32) | - | Идентификатор исполнителя слота |
 | sort | JSON | - | ------ |
 | sort.field | ENUM | - | Поле, по которому осуществляется сортировка в формате lowerCamelCase|
 | sort.direction | ENUM | - | Направление соритировки.[ASC, DESC] |

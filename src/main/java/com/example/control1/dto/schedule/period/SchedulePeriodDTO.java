@@ -1,16 +1,16 @@
 package com.example.control1.dto.schedule.period;
 
-import com.example.control1.entity.Employee;
-import com.example.control1.entity.Schedule;
+import com.example.control1.dto.employee.EmployeeDTO;
+import com.example.control1.dto.schedule.main.ScheduleShortDTO;
+import com.example.control1.dto.schedule.slot.ScheduleSlotDTO;
 import com.example.control1.entity.SchedulePeriod.SlotType;
-import com.example.control1.entity.ScheduleSlot;
 
 public record SchedulePeriodDTO(
         String id,
-        ScheduleSlot slot,
-        Schedule schedule,
+        ScheduleSlotDTO slot,
+        ScheduleShortDTO schedule,
         SlotType slotType,
-        Employee administrator,
-        Employee executor
+        EmployeeDTO administrator,
+        EmployeeDTO executor
 ) {
 }
