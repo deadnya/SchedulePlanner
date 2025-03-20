@@ -5,11 +5,22 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Objects;
 
+/**
+ * Data transfer object for sorting schedule periods.
+ *
+ * @param field field by which to sort
+ * @param direction direction of the sort (ascending or descending)
+ */
 public record SchedulePeriodSort(
     Field field,
     Direction direction
 ) {
 
+    /**
+     * Enum representing the fields by which schedule periods can be sorted.
+     * Mapped to lowerCamelCase in JSON.
+     * Provides methods for getting the database path of the field.
+     */
     public enum Field {
 
         ID("id"),
@@ -37,6 +48,12 @@ public record SchedulePeriodSort(
             this.value = value;
         }
 
+        /**
+         * Gets the database path for the given field.
+         *
+         * @param field field
+         * @return database path
+         */
         public static String getDatabasePath(Field field) {
             return switch (field) {
                 case SLOT_ID -> "slot.id";
@@ -60,11 +77,25 @@ public record SchedulePeriodSort(
             };
         }
 
+        /**
+         * Gets the value of the field.
+         * Used for serialization.
+         *
+         * @return value of the field
+         */
         @JsonValue
         public String getValue() {
             return value;
         }
 
+        /**
+         * Gets the field enum from the given value.
+         * Used for deserialization.
+         *
+         * @param value the value
+         * @return field enum
+         * @throws IllegalArgumentException if the value is invalid
+         */
         @JsonCreator
         public static SchedulePeriodSort.Field getItem(String value) {
             for (SchedulePeriodSort.Field item : values()) {
@@ -78,6 +109,9 @@ public record SchedulePeriodSort(
         }
     }
 
+    /**
+     * Enum representing the direction of the sort.
+     */
     public enum Direction {
         ASC,
         DESC

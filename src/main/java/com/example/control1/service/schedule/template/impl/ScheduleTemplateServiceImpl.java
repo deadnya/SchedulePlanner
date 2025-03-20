@@ -16,6 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Implementation of the ScheduleTemplateService interface.
+ * Provides functionality to manage schedule templates.
+ */
 @Service
 @RequiredArgsConstructor
 public class ScheduleTemplateServiceImpl implements ScheduleTemplateService {
@@ -24,6 +28,12 @@ public class ScheduleTemplateServiceImpl implements ScheduleTemplateService {
     private final ScheduleMapper scheduleMapper;
     private final UUIDService uuidService;
 
+    /**
+     * Creates a new schedule template.
+     *
+     * @param scheduleTemplateCreateDTO data transfer object containing schedule template details
+     * @return response containing the ID of the created schedule template
+     */
     @Override
     public CreateResponseDTO createScheduleTemplate(ScheduleTemplateCreateDTO scheduleTemplateCreateDTO) {
 
@@ -35,6 +45,13 @@ public class ScheduleTemplateServiceImpl implements ScheduleTemplateService {
         return scheduleMapper.toCreateResponseDTO(scheduleTemplate);
     }
 
+    /**
+     * Retrieves a schedule template by its ID.
+     *
+     * @param id ID of the schedule template
+     * @return schedule template data transfer object
+     * @throws ResponseStatusException if the schedule template is not found
+     */
     @Override
     public ScheduleTemplateDTO getScheduleTemplate(String id) {
 
@@ -45,6 +62,13 @@ public class ScheduleTemplateServiceImpl implements ScheduleTemplateService {
         return scheduleMapper.toDTO(scheduleTemplate);
     }
 
+    /**
+     * Retrieves all schedule templates with pagination.
+     *
+     * @param page page number to retrieve
+     * @param size number of schedule templates per page
+     * @return a paginated list of schedule template data transfer objects
+     */
     @Override
     public Page<ScheduleTemplateDTO> getAllScheduleTemplates(Integer page, Integer size) {
 

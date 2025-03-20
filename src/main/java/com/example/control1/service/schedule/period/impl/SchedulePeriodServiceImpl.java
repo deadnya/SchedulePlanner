@@ -1,7 +1,7 @@
 package com.example.control1.service.schedule.period.impl;
 
 import com.example.control1.dto.common.CreateResponseDTO;
-import com.example.control1.dto.schedule.period.OutputSettings;
+import com.example.control1.dto.schedule.period.SchedulePeriodOutputSettings;
 import com.example.control1.dto.schedule.period.SchedulePeriodCreateDTO;
 import com.example.control1.dto.schedule.period.SchedulePeriodDTO;
 import com.example.control1.entity.Employee;
@@ -25,6 +25,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Implementation of the SchedulePeriodService interface.
+ * Provides functionality to manage schedule periods.
+ */
 @Service
 @RequiredArgsConstructor
 public class SchedulePeriodServiceImpl implements SchedulePeriodService {
@@ -37,6 +41,15 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
     private final UUIDService uuidService;
     private final SchedulePeriodFilterProvider schedulePeriodFilterProvider;
 
+    /**
+     * Creates a new schedule period.
+     *
+     * @param schedulePeriodCreateDTO the data transfer object containing schedule period details
+     * @param currentUserId the ID of the current user creating the schedule period
+     * @return the response containing the ID of the created schedule period
+     * @throws ResponseStatusException if the schedule slot, schedule, or employee is not found,
+     * or if the new schedule period intersects with existing ones in the schedule
+     */
     @Override
     public CreateResponseDTO createSchedulePeriod(SchedulePeriodCreateDTO schedulePeriodCreateDTO, String currentUserId) {
 
@@ -124,6 +137,13 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
         return scheduleMapper.toCreateResponseDTO(schedulePeriod);
     }
 
+    /**
+     * Retrieves a schedule period by its ID.
+     *
+     * @param id the ID of the schedule period
+     * @return the schedule period data transfer object
+     * @throws ResponseStatusException if the schedule period is not found
+     */
     @Override
     public SchedulePeriodDTO getSchedulePeriod(String id) {
 
@@ -134,8 +154,14 @@ public class SchedulePeriodServiceImpl implements SchedulePeriodService {
         return scheduleMapper.toDTO(schedulePeriod);
     }
 
+    /**
+     * Retrieves all schedule periods with pagination.
+     *
+     * @param outputSettings the settings containing filter and sort parameters
+     * @return a paginated list of schedule period data transfer objects
+     */
     @Override
-    public Page<SchedulePeriodDTO> getAllSchedulePeriods(OutputSettings outputSettings) {
+    public Page<SchedulePeriodDTO> getAllSchedulePeriods(SchedulePeriodOutputSettings outputSettings) {
 
         var specification = schedulePeriodFilterProvider.getSpecForAllSchedulePeriods(outputSettings);
 

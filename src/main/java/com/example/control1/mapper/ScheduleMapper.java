@@ -14,10 +14,11 @@ import com.example.control1.entity.Schedule;
 import com.example.control1.entity.SchedulePeriod;
 import com.example.control1.entity.ScheduleSlot;
 import com.example.control1.entity.ScheduleTemplate;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 
+/**
+ * Mapper interface for converting between Schedule entities and DTOs.
+ */
 @Mapper(componentModel = "spring")
 public interface ScheduleMapper {
     Schedule toSchedule(ScheduleCreateDTO scheduleCreateDTO);

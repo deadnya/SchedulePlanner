@@ -6,6 +6,13 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetTime;
 
+/**
+ * Data transfer object for creating a schedule slot.
+ *
+ * @param scheduleTemplateId ID of the schedule template
+ * @param beginTime begin time of the slot
+ * @param endTime end time of the slot
+ */
 public record ScheduleSlotCreateDTO(
 
         @NotNull(message = "Schedule template id must be present")

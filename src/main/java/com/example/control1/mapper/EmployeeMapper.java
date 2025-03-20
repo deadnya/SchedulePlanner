@@ -6,6 +6,9 @@ import com.example.control1.dto.employee.EmployeeDTO;
 import com.example.control1.entity.Employee;
 import org.mapstruct.Mapper;
 
+/**
+ * Mapper interface for converting between Employee entities and DTOs.
+ */
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
     Employee toEmployee(EmployeeCreateDTO employeeCreateDTO);

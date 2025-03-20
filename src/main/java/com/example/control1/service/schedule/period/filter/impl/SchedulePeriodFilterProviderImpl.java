@@ -1,6 +1,6 @@
 package com.example.control1.service.schedule.period.filter.impl;
 
-import com.example.control1.dto.schedule.period.OutputSettings;
+import com.example.control1.dto.schedule.period.SchedulePeriodOutputSettings;
 import com.example.control1.dto.schedule.period.SchedulePeriodSort;
 import com.example.control1.entity.SchedulePeriod;
 import com.example.control1.service.schedule.period.filter.SchedulePeriodFilterProvider;
@@ -12,11 +12,21 @@ import java.util.ArrayList;
 
 import static com.example.control1.dto.schedule.period.SchedulePeriodSort.Field.getDatabasePath;
 
+/**
+ * Implementation of the SchedulePeriodFilterProvider interface.
+ * Provides functionality to generate filtering and sorting specifications for schedule periods.
+ */
 @Service
 public class SchedulePeriodFilterProviderImpl implements SchedulePeriodFilterProvider {
 
+    /**
+     * Generates a specification for filtering schedule periods based on the provided output settings.
+     *
+     * @param outputSettings settings containing filter parameters
+     * @return specification for filtering schedule periods
+     */
     @Override
-    public Specification<SchedulePeriod> getSpecForAllSchedulePeriods(OutputSettings outputSettings) {
+    public Specification<SchedulePeriod> getSpecForAllSchedulePeriods(SchedulePeriodOutputSettings outputSettings) {
 
         var filterParams = outputSettings.filter();
 
@@ -57,8 +67,14 @@ public class SchedulePeriodFilterProviderImpl implements SchedulePeriodFilterPro
         return Specification.allOf(specificationPredicates);
     }
 
+    /**
+     * Generates a sort object for sorting schedule periods based on the provided output settings.
+     *
+     * @param outputSettings settings containing sort parameters
+     * @return sort object for sorting schedule periods
+     */
     @Override
-    public Sort getSortForAllSchedulePeriods(OutputSettings outputSettings) {
+    public Sort getSortForAllSchedulePeriods(SchedulePeriodOutputSettings outputSettings) {
 
         Sort sort = null;
 

@@ -18,6 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Implementation of the ScheduleSlotService interface.
+ * Provides functionality to manage schedule slots.
+ */
 @Service
 @RequiredArgsConstructor
 public class ScheduleSlotServiceImpl implements ScheduleSlotService {
@@ -27,6 +31,13 @@ public class ScheduleSlotServiceImpl implements ScheduleSlotService {
     private final ScheduleMapper scheduleMapper;
     private final UUIDService uuidService;
 
+    /**
+     * Creates a new schedule slot.
+     *
+     * @param scheduleSlotCreateDTO data transfer object containing schedule slot details
+     * @return response containing the ID of the created schedule slot
+     * @throws ResponseStatusException if the schedule template is not found
+     */
     @Override
     public CreateResponseDTO createScheduleSlot(ScheduleSlotCreateDTO scheduleSlotCreateDTO) {
 
@@ -48,6 +59,13 @@ public class ScheduleSlotServiceImpl implements ScheduleSlotService {
         return scheduleMapper.toCreateResponseDTO(scheduleSlot);
     }
 
+    /**
+     * Retrieves a schedule slot by its ID.
+     *
+     * @param id ID of the schedule slot
+     * @return schedule slot data transfer object
+     * @throws ResponseStatusException if the schedule slot is not found
+     */
     @Override
     public ScheduleSlotDTO getScheduleSlot(String id) {
 
@@ -58,6 +76,13 @@ public class ScheduleSlotServiceImpl implements ScheduleSlotService {
         return scheduleMapper.toDTO(scheduleSlot);
     }
 
+    /**
+     * Retrieves all schedule slots with pagination.
+     *
+     * @param page page number to retrieve
+     * @param size number of schedule slots per page
+     * @return a paginated list of schedule slot data transfer objects
+     */
     @Override
     public Page<ScheduleSlotDTO> getAllScheduleSlots(Integer page, Integer size) {
 

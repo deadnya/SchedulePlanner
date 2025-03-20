@@ -16,6 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Implementation of the EmployeeService interface.
+ * Provides functionality to manage employees.
+ */
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -24,6 +28,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final UUIDService uuidService;
 
+    /**
+     * Creates a new employee.
+     *
+     * @param employeeCreateDTO data transfer object containing employee details
+     * @return response containing the ID of the created employee
+     */
     @Override
     public CreateResponseDTO createEmployee(EmployeeCreateDTO employeeCreateDTO) {
 
@@ -39,6 +49,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toCreateResponseDTO(employee);
     }
 
+    /**
+     * Retrieves an employee by its ID.
+     *
+     * @param id ID of the employee
+     * @return employee data transfer object
+     */
     @Override
     public EmployeeDTO getEmployee(String id) {
 
@@ -48,6 +64,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toDTO(employee);
     }
 
+    /**
+     * Retrieves all employees with pagination.
+     *
+     * @param page page number to retrieve
+     * @param size number of employees per page
+     * @return a paginated list of employee data transfer objects
+     */
     @Override
     public Page<EmployeeDTO> getAllEmployees(Integer page, Integer size) {
 

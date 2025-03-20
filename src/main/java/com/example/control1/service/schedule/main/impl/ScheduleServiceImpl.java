@@ -18,6 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+/**
+ * Implementation of the ScheduleService interface.
+ * Provides functionality to manage schedules.
+ */
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
@@ -26,6 +30,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleMapper scheduleMapper;
     private final UUIDService uuidService;
 
+    /**
+     * Creates a new schedule.
+     *
+     * @param scheduleCreateDTO Data transfer object containing schedule details
+     * @return Response containing the ID of the created schedule
+     * @throws ResponseStatusException if the schedule cannot be created
+     */
     @Override
     public CreateResponseDTO createSchedule(ScheduleCreateDTO scheduleCreateDTO) {
 
@@ -37,6 +48,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.toResponseCreateDTO(schedule);
     }
 
+    /**
+     * Retrieves a schedule by its ID or name.
+     *
+     * @param request ID or name of the schedule
+     * @return schedule data transfer object. All periods are sorted by begin time.
+     * @throws ResponseStatusException if the schedule is not found
+     */
     @Override
     public ScheduleDTO getSchedule(String request) {
 
@@ -56,6 +74,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleMapper.toDTO(schedule.get());
     }
 
+    /**
+     * Retrieves all schedules with pagination.
+     *
+     * @param page page number to retrieve
+     * @param size number of schedules per page
+     * @return a paginated list of schedule data transfer objects
+     */
     @Override
     public Page<ScheduleDTO> getAllSchedules(Integer page, Integer size) {
 
