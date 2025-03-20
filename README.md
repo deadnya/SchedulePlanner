@@ -1,7 +1,7 @@
 # Контрольная точка 1. Сервис управления расписаниями
 ## To run:
 ```bash
-mvn clean build -DskipTests
+mvn clean package -DskipTests
 docker compose up --build
 ```
 
